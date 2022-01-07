@@ -11,31 +11,31 @@ final class PoolInfo
     /**
      * @var int
      */
-    private $maxActive = 10;
+    private int $maxActive = 10;
 
     /**
      * @var \Swoole\Atomic
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    private $currentActive;
+    private \Swoole\Atomic $currentActive;
 
     /**
      * @var \Swoole\Coroutine\Channel
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    private $connChan;
+    private \Swoole\Coroutine\Channel $connChan;
 
     /**
      * @var \Swoole\Atomic
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    private $idleCheckRunning;
+    private \Swoole\Atomic $idleCheckRunning;
 
     /**
      * @var \Swoole\Atomic
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    private $closed;
+    private \Swoole\Atomic $closed;
 
     private function __construct(array $settings)
     {

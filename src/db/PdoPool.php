@@ -33,7 +33,7 @@ final class PdoPool implements PoolInterface
 
         try {
             $pdo = PdoConnection::create($this->poolId, $cfg);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $pdo = null;
         }
 

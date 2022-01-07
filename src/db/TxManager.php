@@ -6,10 +6,7 @@ use PDO;
 
 final class TxManager
 {
-    /**
-     * @var PDO
-     */
-    private $pdo;
+    private PDO $pdo;
 
     private function __construct(PDO $pdo)
     {

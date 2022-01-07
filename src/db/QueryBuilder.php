@@ -15,42 +15,42 @@ final class QueryBuilder
     /**
      * @var string
      */
-    private $tableName;
+    private string $tableName;
 
     /**
      * @var array
      */
-    private $fields = [];
+    private array $fields = [];
 
     /**
      * @var array
      */
-    private $joins = [];
+    private array $joins = [];
 
     /**
      * @var array
      */
-    private $conditions = [];
+    private array $conditions = [];
 
     /**
      * @var array
      */
-    private $params = [];
+    private array $params = [];
 
     /**
      * @var array
      */
-    private $orderBy = [];
+    private array $orderBy = [];
 
     /**
      * @var array
      */
-    private $groupBy = [];
+    private array $groupBy = [];
 
     /**
      * @var array
      */
-    private $limits = [];
+    private array $limits = [];
 
     private function __construct(string $tableName = '')
     {
@@ -72,7 +72,7 @@ final class QueryBuilder
      * @param string|string[] $fields
      * @return QueryBuilder
      */
-    public function fields($fields): self
+    public function fields(string|array $fields): self
     {
         if (is_string($fields)) {
             if ($fields === '*') {
@@ -100,12 +100,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string $tableName
-     * @param string|Expression ...$args
-     * @return QueryBuilder
-     */
-    public function join(string $tableName, ...$args): self
+    public function join(string $tableName, string|Expression ...$args): self
     {
         $type = 'inner';
         $on = '';
@@ -263,12 +258,7 @@ final class QueryBuilder
         return $this->join($tableName, ...$args);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param mixed ...$args
-     * @return QueryBuilder
-     */
-    public function where($field, ...$args): self
+    public function where(string|Expression $field, ...$args): self
     {
         if (empty($args)) {
             return $this;
@@ -314,12 +304,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereNull($field, bool $not = false): self
+    public function whereNull(string|Expression $field, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -331,21 +316,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @return QueryBuilder
-     */
-    public function whereNotNull($field): self
+    public function whereNotNull(string|Expression $field): self
     {
         return $this->whereNull($field, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereBlank($field, bool $not = false): self
+    public function whereBlank(string|Expression $field, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -357,22 +333,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @return QueryBuilder
-     */
-    public function whereNotBlank($field): self
+    public function whereNotBlank(string|Expression $field): self
     {
         return $this->whereBlank($field, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param array $values
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereIn($field, array $values, bool $not = false): self
+    public function whereIn(string|Expression $field, array $values, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -396,24 +362,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param array $values
-     * @return QueryBuilder
-     */
-    public function whereNotIn($field, array $values): self
+    public function whereNotIn(string|Expression $field, array $values): self
     {
         return $this->whereIn($field, $values, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param int|string|Expression $arg1
-     * @param int|string|Expression $arg2
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereBetween($field, $arg1, $arg2, bool $not = false): self
+    public function whereBetween(string|Expression $field, int|string|Expression $arg1, int|string|Expression $arg2, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -442,25 +396,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param int|string|Expression $arg1
-     * @param int|string|Expression $arg2
-     * @return QueryBuilder
-     */
-    public function whereNotBetween($field, $arg1, $arg2): self
+    public function whereNotBetween(string|Expression $field, int|string|Expression $arg1, int|string|Expression $arg2): self
     {
         return $this->whereBetween($field, $arg1, $arg2);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $arg1
-     * @param string $arg2
-     * @param bool $onlyDate
-     * @return QueryBuilder
-     */
-    public function whereTimeBetween($field, string $arg1, string $arg2, bool $onlyDate = false): self
+    public function whereTimeBetween(string|Expression $field, string $arg1, string $arg2, bool $onlyDate = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -487,13 +428,7 @@ final class QueryBuilder
         return $this->whereBetween($fieldName, $arg1, $arg2);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $likeStr
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereLike($field, string $likeStr, bool $not = false): self
+    public function whereLike(string|Expression $field, string $likeStr, bool $not = false): self
     {
         if ($likeStr === '') {
             return $this;
@@ -512,23 +447,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $likeStr
-     * @return QueryBuilder
-     */
-    public function whereNotLike($field, string $likeStr): self
+    public function whereNotLike(string|Expression $field, string $likeStr): self
     {
         return $this->whereLike($field, $likeStr, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $regex
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function whereRegexp($field, string $regex, bool $not = false): self
+    public function whereRegexp(string|Expression $field, string $regex, bool $not = false): self
     {
         if ($regex === '') {
             return $this;
@@ -545,12 +469,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $regex
-     * @return QueryBuilder
-     */
-    public function whereNotRegexp($field, string $regex): self
+    public function whereNotRegexp(string|Expression $field, string $regex): self
     {
         return $this->whereRegexp($field, $regex, true);
     }
@@ -595,7 +514,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'datetime') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'datetime')) {
                 if ($flag) {
                     return $this->whereNotNull($schema['fieldName']);
                 } else {
@@ -610,7 +529,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'int') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'int')) {
                 if ($flag) {
                     return $this->where($schema['fieldName'], 1);
                 } else {
@@ -641,12 +560,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param mixed ...$args
-     * @return QueryBuilder
-     */
-    public function orWhere($field, ...$args): self
+    public function orWhere(string|Expression $field, ...$args): self
     {
         if (empty($args)) {
             return $this;
@@ -692,12 +606,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereNull($field, bool $not = false): self
+    public function orWhereNull(string|Expression $field, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -710,21 +619,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @return QueryBuilder
-     */
-    public function orWhereNotNull($field): self
+    public function orWhereNotNull(string|Expression $field): self
     {
         return $this->orWhereNull($field, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereBlank($field, bool $not = false): self
+    public function orWhereBlank(string|Expression $field, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -737,22 +637,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @return QueryBuilder
-     */
-    public function orWhereNotBlank($field): self
+    public function orWhereNotBlank(string|Expression $field): self
     {
         return $this->orWhereBlank($field, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param array $values
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereIn($field, array $values, bool $not = false): self
+    public function orWhereIn(string|Expression $field, array $values, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -777,24 +667,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param array $values
-     * @return QueryBuilder
-     */
-    public function orWhereNotIn($field, array $values): self
+    public function orWhereNotIn(string|Expression $field, array $values): self
     {
         return $this->orWhereIn($field, $values, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param int|string|Expression $arg1
-     * @param int|string|Expression $arg2
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereBetween($field, $arg1, $arg2, bool $not = false): self
+    public function orWhereBetween(string|Expression $field, int|string|Expression $arg1, int|string|Expression $arg2, bool $not = false): self
     {
         $fieldName = $this->getFullTableNameOrFullFieldName($field);
 
@@ -824,24 +702,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param int|string|Expression $arg1
-     * @param int|string|Expression $arg2
-     * @return QueryBuilder
-     */
-    public function orWhereNotBetween($field, $arg1, $arg2): self
+    public function orWhereNotBetween(string|Expression $field, int|string|Expression $arg1, int|string|Expression $arg2): self
     {
         return $this->orWhereBetween($field, $arg1, $arg2);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $likeStr
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereLike($field, string $likeStr, bool $not = false): self
+    public function orWhereLike(string|Expression $field, string $likeStr, bool $not = false): self
     {
         if ($likeStr === '') {
             return $this;
@@ -859,23 +725,12 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $likeStr
-     * @return QueryBuilder
-     */
-    public function orWhereNotLike($field, string $likeStr): self
+    public function orWhereNotLike(string|Expression $field, string $likeStr): self
     {
         return $this->orWhereLike($field, $likeStr, true);
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $regex
-     * @param bool $not
-     * @return QueryBuilder
-     */
-    public function orWhereRegexp($field, string $regex, bool $not = false): self
+    public function orWhereRegexp(string|Expression $field, string $regex, bool $not = false): self
     {
         if ($regex === '') {
             return $this;
@@ -893,12 +748,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|Expression $field
-     * @param string $regex
-     * @return QueryBuilder
-     */
-    public function orWhereNotRegexp($field, string $regex): self
+    public function orWhereNotRegexp(string|Expression $field, string $regex): self
     {
         return $this->orWhereRegexp($field, $regex, true);
     }
@@ -943,7 +793,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'datetime') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'datetime')) {
                 if ($flag) {
                     return $this->orWhereNotNull($schema['fieldName']);
                 } else {
@@ -958,7 +808,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'int') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'int')) {
                 if ($flag) {
                     return $this->orWhere($schema['fieldName'], 1);
                 } else {
@@ -989,11 +839,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|array|Expression $orderBy
-     * @return QueryBuilder
-     */
-    public function orderBy($orderBy): self
+    public function orderBy(string|array|Expression $orderBy): self
     {
         $rules = [];
 
@@ -1038,11 +884,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param string|array $groupBy
-     * @return QueryBuilder
-     */
-    public function groupBy($groupBy): self
+    public function groupBy(string|array $groupBy): self
     {
         $rules = [];
 
@@ -1076,11 +918,7 @@ final class QueryBuilder
         return $this;
     }
 
-    /**
-     * @param int|string ...$args
-     * @return QueryBuilder
-     */
-    public function limit(...$args): self
+    public function limit(int|string ...$args): self
     {
         if (empty($args)) {
             return $this;
@@ -1296,7 +1134,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'datetime') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'datetime')) {
                 $data[$schema['fieldName']] = date(DateTimeFormat::FULL);
                 break;
             }
@@ -1336,7 +1174,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'datetime') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'datetime')) {
                 $data[$schema['fieldName']] = date(DateTimeFormat::FULL);
                 break;
             }
@@ -1391,12 +1229,7 @@ final class QueryBuilder
         return [implode('', $sb), $this->params];
     }
 
-    /**
-     * @param string|array|null $fields
-     * @param mixed $txm
-     * @return Collection
-     */
-    public function get($fields = null, $txm = null): Collection
+    public function get(string|array|null $fields = null, $txm = null): Collection
     {
         if ($fields !== null) {
             $this->fields($fields);
@@ -1406,12 +1239,7 @@ final class QueryBuilder
         return DB::selectBySql($sql, $params, $txm);
     }
 
-    /**
-     * @param string|array|null $fields
-     * @param mixed $txm
-     * @return array|null
-     */
-    public function first($fields = null, $txm = null): ?array
+    public function first(string|array|null $fields = null, $txm = null): ?array
     {
         if ($fields !== null) {
             $this->fields($fields);
@@ -1477,7 +1305,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'datetime') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'datetime')) {
                 $updateSet[$schema['fieldName']] = date(DateTimeFormat::FULL);
                 break;
             }
@@ -1489,7 +1317,7 @@ final class QueryBuilder
         ];
 
         foreach ($schemas as $schema) {
-            if (in_array($schema['fieldName'], $fieldNames) && strpos($schema['fieldType'], 'int') !== false) {
+            if (in_array($schema['fieldName'], $fieldNames) && str_contains($schema['fieldType'], 'int')) {
                 $updateSet[$schema['fieldName']] = 1;
                 break;
             }
@@ -1508,13 +1336,7 @@ final class QueryBuilder
         return DB::deleteBySql($sql, $params, $txm);
     }
 
-    /**
-     * @param string $fieldName
-     * @param int|float|string $num
-     * @param mixed $txm
-     * @return int
-     */
-    public function incr(string $fieldName, $num, $txm = null): int {
+    public function incr(string $fieldName, int|float|string $num, $txm = null): int {
         if (is_float($num) || is_string($num)) {
             $num = bcadd($num, 0, 2);
 
@@ -1528,13 +1350,7 @@ final class QueryBuilder
         return $this->update([$fieldName => DB::raw("$fieldName + $num")], $txm);
     }
 
-    /**
-     * @param string $fieldName
-     * @param int|float|string $num
-     * @param null $txm
-     * @return int
-     */
-    public function decr(string $fieldName, $num, $txm = null): int {
+    public function decr(string $fieldName, int|float|string $num, $txm = null): int {
         if (is_float($num) || is_string($num)) {
             $num = bcadd($num, 0, 2);
 
@@ -1548,22 +1364,13 @@ final class QueryBuilder
         return $this->update([$fieldName => DB::raw("$fieldName - $num")], $txm);
     }
 
-    /**
-     * @param string $fieldName
-     * @param null $txm
-     * @return int|float|string
-     */
-    public function sum(string $fieldName, $txm = null)
+    public function sum(string $fieldName, $txm = null): int|float|string
     {
         list($sql, $params) = $this->buildForSum($fieldName);
         return DB::sumBySql($sql, $params, $txm);
     }
 
-    /**
-     * @param string|Expression $arg0
-     * @return string
-     */
-    private function getFullTableNameOrFullFieldName($arg0): string
+    private function getFullTableNameOrFullFieldName(string|Expression $arg0): string
     {
         if ($arg0 instanceof Expression) {
             return $arg0->getExpr();
@@ -1593,11 +1400,7 @@ final class QueryBuilder
         return count($parts) === 1 ? $parts[0] : "$parts[0] AS $parts[1]";
     }
 
-    /**
-     * @param string|Expression $field
-     * @return int
-     */
-    private function findFieldIndex($field): int
+    private function findFieldIndex(string|Expression $field): int
     {
         foreach ($this->fields as $i => $value) {
             if ($this->getFullTableNameOrFullFieldName($field) === $value) {
@@ -1618,11 +1421,7 @@ final class QueryBuilder
         $this->conditions[] = "($last OR $cond)";
     }
 
-    /**
-     * @param string|Expression $arg0
-     * @return string|null
-     */
-    private function buildOrderByItem($arg0): ?string
+    private function buildOrderByItem(string|Expression $arg0): ?string
     {
         if ($arg0 instanceof Expression) {
             return $arg0->getExpr();
@@ -1667,11 +1466,7 @@ final class QueryBuilder
         return "$fieldName $direction";
     }
 
-    /**
-     * @param string|Expression $arg0
-     * @return string|null
-     */
-    private function buildGroupByItem($arg0): ?string
+    private function buildGroupByItem(string|Expression $arg0): ?string
     {
         if ($arg0 instanceof Expression) {
             return $arg0->getExpr();

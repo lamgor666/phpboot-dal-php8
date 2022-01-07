@@ -18,18 +18,11 @@ interface PoolInterface
 
     public function run(): void;
 
-    /**
-     * @param int|float|null $timeout
-     * @return mixed
-     */
-    public function take($timeout = null);
+    public function take(int|float|null $timeout = null): mixed;
 
-    public function release($conn): void;
+    public function release(mixed $conn): void;
 
     public function updateCurrentActive(int $num): void;
 
-    /**
-     * @param int|string|null $timeout
-     */
-    public function destroy($timeout = null): void;
+    public function destroy(int|string|null $timeout = null): void;
 }

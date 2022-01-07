@@ -91,7 +91,7 @@ final class ConnectionBuilder
 
         try {
             return new PDO($dsn, $username, $password, $opts);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return null;
         }
     }
@@ -166,7 +166,7 @@ final class ConnectionBuilder
             }
 
             return $redis;
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return null;
         }
     }

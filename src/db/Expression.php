@@ -4,10 +4,7 @@ namespace phpboot\dal\db;
 
 final class Expression
 {
-    /**
-     * @var string
-     */
-    private $expr;
+    private string $expr;
 
     private function __construct(string $expr)
     {

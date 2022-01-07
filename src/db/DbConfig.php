@@ -9,52 +9,52 @@ final class DbConfig
     /**
      * @var array
      */
-    private static $map1 = [];
+    private static array $map1 = [];
 
     /**
      * @var bool
      */
-    private $enabled;
+    private bool $enabled;
 
     /**
      * @var string
      */
-    private $host = '127.0.0.1';
+    private string $host = '127.0.0.1';
 
     /**
      * @var int
      */
-    private $port = 3306;
+    private int $port = 3306;
 
     /**
      * @var string
      */
-    private $username = 'root';
+    private string $username = 'root';
 
     /**
      * @var string
      */
-    private $password = '';
+    private string $password = '';
 
     /**
      * @var string
      */
-    private $dbname = '';
+    private string $dbname = '';
 
     /**
      * @var string
      */
-    private $charset = 'utf8mb4';
+    private string $charset = 'utf8mb4';
 
     /**
      * @var string
      */
-    private $collation = 'utf8mb4_general_ci';
+    private string $collation = 'utf8mb4_general_ci';
 
     /**
      * @var array|null
      */
-    private $cliSettings = null;
+    private ?array $cliSettings = null;
 
     private function __construct(?array $settings = null)
     {

@@ -16,30 +16,24 @@ final class RateLimiter
     /**
      * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @var int
      */
-    private $count;
+    private int $count;
 
     /**
      * @var int
      */
-    private $duration;
+    private int $duration;
 
     /**
      * @var string
      */
-    private $cacheDir;
+    private string $cacheDir;
 
-    /**
-     * @param string $id
-     * @param int $count
-     * @param int|string $duration
-     * @param string $cacheDir
-     */
-    private function __construct(string $id, int $count, $duration, string $cacheDir = '')
+    private function __construct(string $id, int $count, int|string $duration, string $cacheDir = '')
     {
         if ($cacheDir === '') {
             $cacheDir = FileUtils::getRealpath('classpath:cache');
@@ -60,14 +54,7 @@ final class RateLimiter
         $this->cacheDir = $cacheDir;
     }
 
-    /**
-     * @param string $id
-     * @param int $count
-     * @param int|string $duration
-     * @param string $cacheDir
-     * @return self
-     */
-    public static function create(string $id, int $count, $duration, string $cacheDir = ''): self
+    public static function create(string $id, int $count, int|string $duration, string $cacheDir = ''): self
     {
         return new self($id, $count, $duration, $cacheDir);
     }
@@ -119,7 +106,7 @@ final class RateLimiter
             $retryAfter = $resetAt - $ts1;
             $resetAt = date('Y-m-d H:i:s', $resetAt);
             return compact('total', 'remaining', 'resetAt', 'retryAfter');
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return [];
         } finally {
             $redis->close();
@@ -218,7 +205,7 @@ final class RateLimiter
             }
 
             return '';
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return '';
         }
     }
@@ -241,7 +228,7 @@ final class RateLimiter
 
         try {
             file_put_contents($cacheFile, $contents);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
         }
     }
 }

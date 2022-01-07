@@ -105,13 +105,7 @@ final class RedisCmd
         return self::boolResult('SET', [$key, $value]);
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     * @param int|string $ttl
-     * @return bool
-     */
-    public static function setex(string $key, string $value, $ttl): bool
+    public static function setex(string $key, string $value, int|string $ttl): bool
     {
         if (is_string($ttl)) {
             $ttl = StringUtils::toDuration($ttl);
@@ -120,13 +114,7 @@ final class RedisCmd
         return self::boolResult('SETEX', [$key, "$ttl", $value]);
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     * @param int|string $ttl
-     * @return bool
-     */
-    public static function psetex(string $key, string $value, $ttl): bool
+    public static function psetex(string $key, string $value, int|string $ttl): bool
     {
         if (is_string($ttl)) {
             $ttl = StringUtils::toDuration($ttl);
@@ -154,12 +142,7 @@ final class RedisCmd
         return self::boolResult('EXISTS', [$key]);
     }
 
-    /**
-     * @param string $key
-     * @param int|string $duration
-     * @return bool
-     */
-    public static function expire(string $key, $duration): bool
+    public static function expire(string $key, int|string $duration): bool
     {
         if (is_string($duration)) {
             $duration = StringUtils::toDuration($duration);
@@ -339,12 +322,7 @@ final class RedisCmd
     /* end of Hashes */
 
     /* Lists */
-    /**
-     * @param string[] $keys
-     * @param int|string $timeout
-     * @return string[]
-     */
-    public static function blPop(array $keys, $timeout): array
+    public static function blPop(array $keys, int|string $timeout): array
     {
         $args = [];
 
@@ -368,12 +346,7 @@ final class RedisCmd
         return self::arrayResult('BLPOP', $args);
     }
 
-    /**
-     * @param string[] $keys
-     * @param int|string $timeout
-     * @return string[]
-     */
-    public static function brPop(array $keys, $timeout): array
+    public static function brPop(array $keys, int|string $timeout): array
     {
         $args = [];
 
@@ -397,13 +370,7 @@ final class RedisCmd
         return self::arrayResult('BRPOP', $args);
     }
 
-    /**
-     * @param string $srcKey
-     * @param string $dstKey
-     * @param int|string $timeout
-     * @return string
-     */
-    public static function bRPopLPush(string $srcKey, string $dstKey, $timeout): string
+    public static function bRPopLPush(string $srcKey, string $dstKey, int|string $timeout): string
     {
         if (is_string($timeout)) {
             $timeout = StringUtils::toDuration($timeout);
@@ -433,7 +400,7 @@ final class RedisCmd
      * @param int|null $count
      * @return string|string[]
      */
-    public static function lPop(string $key, ?int $count = null)
+    public static function lPop(string $key, ?int $count = null): string|array
     {
         $cmd = 'LPOP';
         $multi = false;
@@ -502,7 +469,7 @@ final class RedisCmd
      * @param int|null $count
      * @return string|string[]
      */
-    public static function rPop(string $key, ?int $count = null)
+    public static function rPop(string $key, ?int $count = null): string|array
     {
         $cmd = 'RPOP';
         $multi = false;
@@ -652,13 +619,7 @@ final class RedisCmd
     /* end of Sets */
 
     /* Sorted Sets */
-    /**
-     * @param array $keys
-     * @param int|string $timeout
-     * @param bool $max
-     * @return array
-     */
-    public static function bzPop(array $keys, $timeout, bool $max = false): array
+    public static function bzPop(array $keys, int|string $timeout, bool $max = false): array
     {
         $cmd = $max ? 'BZPOPMAX@array' : 'BZPOPMIN@array';
 
@@ -669,15 +630,7 @@ final class RedisCmd
         return self::arrayResult($cmd, array_merge($keys, ["$timeout"]));
     }
 
-    /**
-     * @param string $key
-     * @param int|float $score
-     * @param string $value
-     * @param array $options
-     * @param mixed ...$otherScoreAndValues
-     * @return bool
-     */
-    public static function zAdd(string $key, $score, string $value, array $options = [], ...$otherScoreAndValues): bool
+    public static function zAdd(string $key, int|float $score, string $value, array $options = [], ...$otherScoreAndValues): bool
     {
         $args = [$key];
         $supportedOptions = ['XX', 'NX', 'LT', 'GT', 'CH', 'INCR'];
@@ -729,13 +682,7 @@ final class RedisCmd
         return self::zCard($key);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $start
-     * @param int|float $end
-     * @return int
-     */
-    public static function zCount(string $key, $start, $end): int
+    public static function zCount(string $key, int|float $start, int|float $end): int
     {
         return self::intResult('ZCOUNT', [$key, "$start", "$end"]);
     }
@@ -757,14 +704,7 @@ final class RedisCmd
         return self::arrayResult($cmd, $args);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $min
-     * @param int|float $max
-     * @param array $options
-     * @return array
-     */
-    public static function zRange(string $key, $min, $max, array $options = []): array
+    public static function zRange(string $key, int|float $min, int|float $max, array $options = []): array
     {
         $args = [$key, "$min", "$max", 'BYSCORE'];
 
@@ -811,26 +751,12 @@ final class RedisCmd
         return $list;
     }
 
-    /**
-     * @param string $key
-     * @param int|float $min
-     * @param int|float $max
-     * @param array $options
-     * @return array
-     */
-    public static function zRangeByScore(string $key, $min, $max, array $options = []): array
+    public static function zRangeByScore(string $key, int|float $min, int|float $max, array $options = []): array
     {
         return self::zRange($key, $min, $max, $options);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $min
-     * @param int|float $max
-     * @param array $options
-     * @return array
-     */
-    public static function zRevRangeByScore(string $key, $min, $max, array $options = []): array
+    public static function zRevRangeByScore(string $key, int|float $min, int|float $max, array $options = []): array
     {
         return self::zRange($key, $min, $max, $options);
     }
@@ -870,47 +796,22 @@ final class RedisCmd
         return self::zRemRangeByRank($key, $start, $end);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $start
-     * @param int|float $end
-     * @return int
-     */
-    public static function zRemRangeByScore(string $key, $start, $end): int
+    public static function zRemRangeByScore(string $key, int|float $start, int|float $end): int
     {
         return self::intResult('ZREMRANGEBYSCORE', [$key, "$start", "$end"]);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $start
-     * @param int|float $end
-     * @return int
-     */
-    public static function zDeleteRangeByScore(string $key, $start, $end): int
+    public static function zDeleteRangeByScore(string $key, int|float $start, int|float $end): int
     {
         return self::zRemRangeByScore($key, $start, $end);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $start
-     * @param int|float $end
-     * @return int
-     */
-    public static function zRemoveRangeByScore(string $key, $start, $end): int
+    public static function zRemoveRangeByScore(string $key, int|float $start, int|float $end): int
     {
         return self::zRemRangeByScore($key, $start, $end);
     }
 
-    /**
-     * @param string $key
-     * @param int|float $min
-     * @param int|float $max
-     * @param array $options
-     * @return array
-     */
-    public static function zRevRange(string $key, $min, $max, array $options = []): array
+    public static function zRevRange(string $key, int|float $min, int|float $max, array $options = []): array
     {
         $options['rev'] = true;
         return self::zRange($key, $min, $max, $options);
@@ -986,7 +887,7 @@ final class RedisCmd
             throw $ex1;
         }
 
-        if (strpos($cmd, '@') !== false) {
+        if (str_contains($cmd, '@')) {
             $cmd = StringUtils::substringBefore($cmd, '@');
         }
 

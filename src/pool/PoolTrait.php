@@ -18,52 +18,52 @@ trait PoolTrait
     /**
      * @var int
      */
-    private $workerId;
+    private int $workerId;
 
     /**
      * @var string
      */
-    private $poolId;
+    private string $poolId;
 
     /**
      * @var int
      */
-    private $minActive = 10;
+    private int $minActive = 10;
 
     /**
      * @var int
      */
-    private $maxActive = 10;
+    private int $maxActive = 10;
 
     /**
      * @var float
      */
-    private $takeTimeout = 3.0;
+    private float $takeTimeout = 3.0;
 
     /**
      * @var int
      */
-    private $maxIdleTime = 1800;
+    private int $maxIdleTime = 1800;
 
     /**
      * @var int
      */
-    private $idleCheckInterval = 10;
+    private int $idleCheckInterval = 10;
 
     /**
      * @var PoolInfo
      */
-    private $poolInfo;
+    private PoolInfo $poolInfo;
 
     /**
      * @var bool
      */
-    private $isInDebugMode = false;
+    private bool $isInDebugMode = false;
 
     /**
      * @var LoggerInterface|null
      */
-    private $logger = null;
+    private ?LoggerInterface $logger = null;
 
     public function inDebugMode(?bool $flag = null): bool
     {
@@ -80,9 +80,6 @@ trait PoolTrait
         $this->logger = $logger;
     }
 
-    /**
-     * @return LoggerInterface|null
-     */
     public function getLogger(): ?LoggerInterface
     {
         return $this->logger;
@@ -135,22 +132,16 @@ trait PoolTrait
         $this->runIdleChecker();
     }
 
-    public function take($timeout = null)
+    public function take(int|float|null $timeout = null): mixed
     {
         $poolType = $this->getPoolType();
-        $conn = null;
         $ex1 = new RuntimeException("fail to take $poolType connection from connection pool");
 
         if ($this->closed() || $this->idleCheckRunning()) {
-            switch ($poolType) {
-                case 'pdo':
-                case 'db':
-                    $conn = ConnectionBuilder::buildPdoConnection();
-                    break;
-                case 'redis':
-                    $conn = ConnectionBuilder::buildRedisConnection();
-                    break;
-            }
+            $conn = match ($poolType) {
+                'pdo', 'db' => ConnectionBuilder::buildPdoConnection(),
+                'redis' => ConnectionBuilder::buildRedisConnection(),
+            };
 
             if (!is_object($conn)) {
                 throw $ex1;
@@ -196,7 +187,7 @@ trait PoolTrait
         return $conn;
     }
 
-    public function release($conn): void
+    public function release(mixed $conn): void
     {
         if (!is_object($conn) || !($conn instanceof ConnectionInterface)) {
             return;
@@ -228,7 +219,7 @@ trait PoolTrait
         $this->poolInfo->getCurrentActiveAtomic()->set($num);
     }
 
-    public function destroy($timeout = null): void
+    public function destroy(int|string|null $timeout = null): void
     {
         if (is_string($timeout) && $timeout !== '') {
             $timeout = Cast::toDuration($timeout);
@@ -416,7 +407,7 @@ trait PoolTrait
 
         try {
             $conn = $this->newConnection();
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $conn = null;
         }
 

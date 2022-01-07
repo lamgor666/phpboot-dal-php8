@@ -10,42 +10,42 @@ final class RedisConfig
     /**
      * @var array
      */
-    private static $map1 = [];
+    private static array $map1 = [];
 
     /**
      * @var bool
      */
-    private $enabled;
+    private bool $enabled;
 
     /**
      * @var string
      */
-    private $host = '127.0.0.1';
+    private string $host = '127.0.0.1';
 
     /**
      * @var int
      */
-    private $port = 6379;
+    private int $port = 6379;
 
     /**
      * @var string
      */
-    private $password = '';
+    private string $password = '';
 
     /**
      * @var int
      */
-    private $database = 0;
+    private int $database = 0;
 
     /**
      * @var int
      */
-    private $readTimeout = -1;
+    private int $readTimeout = -1;
 
     /**
      * @var array|null
      */
-    private $cliSettings = null;
+    private ?array $cliSettings = null;
 
     private function __construct(?array $settings = null)
     {

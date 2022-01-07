@@ -23,10 +23,7 @@ use Throwable;
 
 final class DB
 {
-    /**
-     * @var array
-     */
-    private static $map1 = [];
+    private static array $map1 = [];
 
     private function __construct()
     {
@@ -143,7 +140,7 @@ final class DB
         if (is_file($cacheFile)) {
             try {
                 $schemas = include($cacheFile);
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 $schemas = [];
             }
 
@@ -186,7 +183,7 @@ final class DB
 
         try {
             $schemas = include($cacheFile);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $schemas = [];
         }
 
@@ -197,7 +194,7 @@ final class DB
     {
         $tableName = str_replace('`', '', $tableName);
 
-        if (strpos($tableName, '.') !== false) {
+        if (str_contains($tableName, '.')) {
             $tableName = StringUtils::substringAfterLast($tableName, '.');
         }
 
@@ -449,13 +446,7 @@ final class DB
         }
     }
 
-    /**
-     * @param string $sql
-     * @param array $params
-     * @param TxManager|null $txm
-     * @return int|float|string
-     */
-    public static function sumBySql(string $sql, array $params = [], ?TxManager $txm = null)
+    public static function sumBySql(string $sql, array $params = [], ?TxManager $txm = null): int|float|string
     {
         $logger = self::getLogger();
         $canWriteLog = self::debugLogEnabled() && $logger instanceof LoggerInterface;
@@ -571,11 +562,7 @@ final class DB
         }
     }
 
-    /**
-     * @param Closure $callback
-     * @param int|string|null $timeout
-     */
-    public static function transations(Closure $callback, $timeout = null): void
+    public static function transations(Closure $callback, int|string|null $timeout = null): void
     {
         if (Swoole::inCoroutineMode(true)) {
             if (is_string($timeout) && $timeout !== '') {
@@ -621,7 +608,7 @@ final class DB
         if ($pool instanceof PoolInterface) {
             try {
                 $pdo = $pool->take();
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 $pdo = null;
             }
         }
@@ -748,13 +735,13 @@ final class DB
 
             foreach ($records as $record) {
                 foreach ($record as $key => $value) {
-                    if (strpos($key, 'Tables_in') !== false) {
+                    if (str_contains($key, 'Tables_in')) {
                         $tables[] = trim($value);
                         break;
                     }
                 }
             }
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             unset($pdo);
             return [];
         }
@@ -805,7 +792,7 @@ final class DB
                     $autoIncrement = $item['Extra'] === 'auto_increment';
                     $parts = preg_split(Regexp::SPACE_SEP, $item['Type']);
 
-                    if (strpos($parts[0], '(') !== false) {
+                    if (str_contains($parts[0], '(')) {
                         $fieldType = StringUtils::substringBefore($parts[0], '(');
                         $fieldSize = str_replace($fieldType, '', $parts[0]);
                     } else {
@@ -836,7 +823,7 @@ final class DB
                         'isPrimaryKey'
                     );
                 }
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 $schema = null;
             }
 
@@ -914,10 +901,7 @@ final class DB
         }
     }
 
-    /**
-     * @param string|Throwable $msg
-     */
-    private static function writeErrorLog($msg): void
+    private static function writeErrorLog(string|Throwable $msg): void
     {
         $logger = self::getLogger();
 

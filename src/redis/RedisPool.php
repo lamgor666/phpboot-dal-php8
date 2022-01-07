@@ -33,7 +33,7 @@ final class RedisPool implements PoolInterface
 
         try {
             $redis = RedisConnection::create($this->poolId, $cfg);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $redis = null;
         }
 

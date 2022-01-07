@@ -10,10 +10,7 @@ use Throwable;
 
 final class PoolManager
 {
-    /**
-     * @var array
-     */
-    private static $map1 = [];
+    private static array $map1 = [];
 
     private function __construct()
     {
@@ -86,35 +83,27 @@ final class PoolManager
             if ($pool instanceof PoolInterface) {
                 try {
                     $conn = $pool->take();
-                } catch (Throwable $ex) {
+                } catch (Throwable) {
                     $conn = null;
                 }
             }
 
             if (!is_object($conn)) {
-                switch ($connectionType) {
-                    case 'pdo':
-                        $conn = ConnectionBuilder::buildPdoConnection();
-                        break;
-                    case 'redis':
-                        $conn = ConnectionBuilder::buildRedisConnection();
-                        break;
-                    default:
-                        $conn = null;
-                }
+                $conn = match ($connectionType) {
+                    'pdo' => ConnectionBuilder::buildPdoConnection(),
+                    'redis' => ConnectionBuilder::buildRedisConnection(),
+                    default => null,
+                };
             }
 
             return $conn;
         }
 
-        switch ($connectionType) {
-            case 'pdo':
-                return ConnectionBuilder::buildPdoConnection();
-            case 'redis':
-                return ConnectionBuilder::buildRedisConnection();
-            default:
-                return null;
-        }
+        return match ($connectionType) {
+            'pdo' => ConnectionBuilder::buildPdoConnection(),
+            'redis' => ConnectionBuilder::buildRedisConnection(),
+            default => null,
+        };
     }
 
     public static function getPoolIdFromConnection($conn): string
@@ -141,7 +130,7 @@ final class PoolManager
             if (method_exists($conn, 'close')) {
                 try {
                     $conn->close();
-                } catch (Throwable $ex) {
+                } catch (Throwable) {
                 }
             }
 

@@ -16,17 +16,17 @@ final class RedisLock
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
      */
-    private $contents;
+    private string $contents;
 
     /**
      * @var string
      */
-    private $cacheDir;
+    private string $cacheDir;
 
     private function __construct(string $key, string $cacheDir = '')
     {
@@ -44,12 +44,7 @@ final class RedisLock
         return new self($key, $cacheDir);
     }
 
-    /**
-     * @param int|string|null $waitTimeout
-     * @param int|string|null $ttl
-     * @return bool
-     */
-    public function tryLock($waitTimeout = null, $ttl = null): bool
+    public function tryLock(int|string|null $waitTimeout = null, int|string|null $ttl = null): bool
     {
         if (is_string($waitTimeout)) {
             $waitTimeout = Cast::toDuration($waitTimeout);
@@ -99,7 +94,7 @@ final class RedisLock
 
             try {
                 $result = $redis->evalSha($luaSha, [$key, $contents, "$ttl"], 1);
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
             }
 
             $n1 = Cast::toInt($result);
@@ -141,7 +136,7 @@ final class RedisLock
 
         try {
             $redis->evalSha($luaSha, [$key, $contents], 1);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
         } finally {
             $redis->close();
         }
@@ -175,7 +170,7 @@ final class RedisLock
             }
 
             return '';
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return '';
         }
     }
@@ -198,7 +193,7 @@ final class RedisLock
 
         try {
             file_put_contents($cacheFile, $contents);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
         }
     }
 

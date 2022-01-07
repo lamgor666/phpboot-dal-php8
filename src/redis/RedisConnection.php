@@ -14,17 +14,17 @@ class RedisConnection extends Redis implements ConnectionInterface
     /**
      * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @var string
      */
-    private $poolId;
+    private string $poolId;
 
     /**
      * @var int|null
      */
-    private $lastUsedAt = null;
+    private ?int $lastUsedAt = null;
 
     private function __construct(string $poolId, RedisConfig $cfg)
     {
