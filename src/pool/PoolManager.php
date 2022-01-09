@@ -27,7 +27,7 @@ final class PoolManager
         }
 
         $poolType = StringUtils::substringBefore($pool->getPoolId(), ':');
-        $key = "{$poolType}Pool_worker$workerId";
+        $key = "{$poolType}_pool_worker$workerId";
         self::$map1[$key] = $pool;
     }
 
@@ -41,14 +41,14 @@ final class PoolManager
             return null;
         }
 
-        $key = "{$poolType}Pool_worker$workerId";
+        $key = "{$poolType}_pool_worker$workerId";
         $pool = self::$map1[$key];
         return $pool instanceof PoolInterface ? $pool : null;
     }
 
     public static function withPoolInfo(string $poolType, PoolInfo $poolInfo): void
     {
-        $key = "{$poolType}PoolInfoList";
+        $key = "{$poolType}_pool_info_list";
 
         if (!is_array(self::$map1[$key])) {
             self::$map1[$key] = [$poolInfo];
@@ -63,7 +63,7 @@ final class PoolManager
             return null;
         }
 
-        $key = "{$poolType}PoolInfoList";
+        $key = "{$poolType}_pool_info_list";
 
         if (!is_array(self::$map1[$key]) || $workerId > count(self::$map1[$key]) - 1) {
             return null;

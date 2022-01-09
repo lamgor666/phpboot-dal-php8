@@ -98,33 +98,15 @@ final class RedisConfig
         return new self($settings);
     }
 
-    public static function withConfig(RedisConfig $cfg, ?int $workerId = null): void
+    public static function withConfig(RedisConfig $cfg): void
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "worker$workerId";
-        } else {
-            $key = 'noworker';
-        }
-
+        $key = 'current';
         self::$map1[$key] = $cfg;
     }
 
-    public static function loadCurrent(?int $workerId = null): ?RedisConfig
+    public static function loadCurrent(): ?RedisConfig
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "worker$workerId";
-        } else {
-            $key = 'noworker';
-        }
-
+        $key = 'current';
         $cfg = self::$map1[$key];
         return $cfg instanceof RedisConfig ? $cfg : null;
     }

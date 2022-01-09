@@ -29,48 +29,22 @@ final class DB
     {
     }
 
-    public static function withLogger(LoggerInterface $logger, ?int $workerId = null): void
+    public static function withLogger(LoggerInterface $logger): void
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "logger_worker$workerId";
-        } else {
-            $key = 'logger_noworker';
-        }
-
+        $key = 'logger';
         self::$map1[$key] = $logger;
     }
 
-    private static function getLogger(?int $workerId = null): ?LoggerInterface
+    private static function getLogger(): ?LoggerInterface
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "logger_worker$workerId";
-        } else {
-            $key = 'logger_noworker';
-        }
-
+        $key = 'logger';
         $logger = self::$map1[$key];
         return $logger instanceof LoggerInterface ? $logger : null;
     }
 
-    public static function debugLogEnabled(?bool $flag = null, ?int $workerId = null): bool
+    public static function debugLogEnabled(?bool $flag = null): bool
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "debugLogEnabled_orker$workerId";
-        } else {
-            $key = 'debugLogEnabled_noworker';
-        }
+        $key = 'debug_log_enabled';
 
         if (is_bool($flag)) {
             self::$map1[$key] = $flag;
@@ -80,33 +54,15 @@ final class DB
         return self::$map1[$key] === true;
     }
 
-    public static function withTableSchemasCacheFilepath(string $fpath, ?int $workerId = null): void
+    public static function withTableSchemasCacheFilepath(string $fpath): void
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "tableSchemasCacheFilepath_worker$workerId";
-        } else {
-            $key = 'tableSchemasCacheFilepath_noworker';
-        }
-        
+        $key = 'table_schemas_cache_filepath';
         self::$map1[$key] = FileUtils::getRealpath($fpath);
     }
     
-    private static function getTableSchemasCacheFilepath(?int $workerId = null): string
+    private static function getTableSchemasCacheFilepath(): string
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "tableSchemasCacheFilepath_worker$workerId";
-        } else {
-            $key = 'tableSchemasCacheFilepath_noworker';
-        }
-        
+        $key = 'table_schemas_cache_filepath';
         $fpath = self::$map1[$key];
         
         if (!is_string($fpath) || $fpath === '') {

@@ -2,8 +2,6 @@
 
 namespace phpboot\dal\db;
 
-use phpboot\common\swoole\Swoole;
-
 final class DbConfig
 {
     /**
@@ -104,33 +102,15 @@ final class DbConfig
         return new self($settings);
     }
 
-    public static function withConfig(DbConfig $cfg, ?int $workerId = null): void
+    public static function withConfig(DbConfig $cfg): void
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "worker$workerId";
-        } else {
-            $key = 'noworker';
-        }
-
+        $key = 'current';
         self::$map1[$key] = $cfg;
     }
 
-    public static function loadCurrent(?int $workerId = null): ?DbConfig
+    public static function loadCurrent(): ?DbConfig
     {
-        if (Swoole::inCoroutineMode(true)) {
-            if (!is_int($workerId)) {
-                $workerId = Swoole::getWorkerId();
-            }
-
-            $key = "worker$workerId";
-        } else {
-            $key = 'noworker';
-        }
-
+        $key = 'current';
         $cfg = self::$map1[$key];
         return $cfg instanceof DbConfig ? $cfg : null;
     }
