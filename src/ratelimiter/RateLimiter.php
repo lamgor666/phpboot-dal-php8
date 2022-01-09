@@ -13,32 +13,13 @@ use Throwable;
 
 final class RateLimiter
 {
-    /**
-     * @var string
-     */
+    private static array $map1 = [];
     private string $id;
-
-    /**
-     * @var int
-     */
     private int $count;
-
-    /**
-     * @var int
-     */
     private int $duration;
 
-    /**
-     * @var string
-     */
-    private string $cacheDir;
-
-    private function __construct(string $id, int $count, int|string $duration, string $cacheDir = '')
+    private function __construct(string $id, int $count, int|string $duration)
     {
-        if ($cacheDir === '') {
-            $cacheDir = FileUtils::getRealpath('classpath:cache');
-        }
-
         $this->id = $id;
         $this->count = $count;
 
@@ -51,12 +32,37 @@ final class RateLimiter
         }
 
         $this->duration = $duration;
-        $this->cacheDir = $cacheDir;
     }
 
-    public static function create(string $id, int $count, int|string $duration, string $cacheDir = ''): self
+    public static function create(string $id, int $count, int|string $duration): self
     {
-        return new self($id, $count, $duration, $cacheDir);
+        return new self($id, $count, $duration);
+    }
+
+    public static function luaShaCacheDir(?string $dir = null): string
+    {
+        if (is_string($dir)) {
+            $dir = FileUtils::getRealpath($dir);
+
+            if (!is_dir($dir) || !is_writable($dir)) {
+                return '';
+            }
+
+            self::$map1['luaShaCacheDir'] = $dir;
+            return '';
+        }
+
+        $dir = self::$map1['luaShaCacheDir'];
+
+        if (!is_string($dir)) {
+            $dir = FileUtils::getRealpath('classpath:cache');
+        }
+
+        if (!is_string($dir) || $dir === '' || !is_dir($dir) || !is_writable($dir)) {
+            return '';
+        }
+
+        return $dir;
     }
 
     public function getLimit(): array
@@ -179,7 +185,13 @@ final class RateLimiter
 
     private function ensureLuaShaExists(Redis $redis) : string
     {
-        $cacheFile = $this->cacheDir . '/luasha.ratelimiter.dat';
+        $dir = self::luaShaCacheDir();
+
+        if ($dir === '') {
+            return '';
+        }
+
+        $cacheFile = "$dir/luasha.ratelimiter.dat";
 
         if (is_file($cacheFile)) {
             $contents = file_get_contents($cacheFile);

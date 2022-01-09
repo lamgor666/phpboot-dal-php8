@@ -13,35 +13,45 @@ use Throwable;
 
 final class RedisLock
 {
-    /**
-     * @var string
-     */
+    private static array $map1 = [];
     private string $key;
-
-    /**
-     * @var string
-     */
     private string $contents;
 
-    /**
-     * @var string
-     */
-    private string $cacheDir;
-
-    private function __construct(string $key, string $cacheDir = '')
+    private function __construct(string $key)
     {
-        if ($cacheDir === '') {
-            $cacheDir = FileUtils::getRealpath('classpath:cache');
-        }
-
         $this->key = $key;
         $this->contents = StringUtils::getRandomString(16);
-        $this->cacheDir = $cacheDir;
     }
 
-    public static function create(string $key, string $cacheDir = ''): self
+    public static function create(string $key): self
     {
-        return new self($key, $cacheDir);
+        return new self($key);
+    }
+
+    public static function luaShaCacheDir(?string $dir = null): string
+    {
+        if (is_string($dir)) {
+            $dir = FileUtils::getRealpath($dir);
+
+            if (!is_dir($dir) || !is_writable($dir)) {
+                return '';
+            }
+
+            self::$map1['luaShaCacheDir'] = $dir;
+            return '';
+        }
+
+        $dir = self::$map1['luaShaCacheDir'];
+
+        if (!is_string($dir)) {
+            $dir = FileUtils::getRealpath('classpath:cache');
+        }
+
+        if (!is_string($dir) || $dir === '' || !is_dir($dir) || !is_writable($dir)) {
+            return '';
+        }
+
+        return $dir;
     }
 
     public function tryLock(int|string|null $waitTimeout = null, int|string|null $ttl = null): bool
@@ -144,7 +154,13 @@ final class RedisLock
 
     private function ensureLuaShaExists(Redis $redis, string $type) : string
     {
-        $cacheFile = $this->cacheDir . "/luasha.redislock.$type.dat";
+        $dir = self::luaShaCacheDir();
+
+        if ($dir === '') {
+            return '';
+        }
+
+        $cacheFile = "$dir/luasha.redislock.$type.dat";
 
         if (is_file($cacheFile)) {
             $contents = file_get_contents($cacheFile);
